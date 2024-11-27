@@ -1,1 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linksaw</title>
+    <style>
+        /* Reset and Base Styling */
+        * {
+            box-sizing: border-box;
+        }
 
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f4f4f9;
+            color: #333;
+            padding-top: 5%;
+        }
+
+        a {
+            color: #ff914d;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #ff914d;
+        }
+
+        .search-container {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 12px 35px 12px 15px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        #searchInput:focus {
+            border-color: #ff914d;
+            box-shadow: 0 4px 10px rgba(255, 145, 77, 0.2);
+        }
+
+        .clear-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #757575;
+            cursor: pointer;
+            outline: none;
+            display: none;
+            padding: 0;
+        }
+
+        .clear-icon:hover {
+            color: black;
+        }
+
+        .description {
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #666;
+        }
+
+        #generatedLink {
+            font-size: 1.5rem;
+            margin-top: 10px;
+        }
+
+        .copy-button {
+            background-color: #ff914d;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px auto 0;
+            display: block;
+        }
+
+        .copy-button:hover {
+            background-color: #ff7a2e;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #757575;
+            margin-top: auto;
+            padding: 10px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <h1>Linksaw.com</h1>
+        <div class="search-input-wrapper">
+            <input type="text" id="searchInput" placeholder="Enter keywords to find your link" required autofocus>
+            <button class="clear-icon" id="clearIcon" title="Clear">&#x2715;</button>
+        </div>
+        <div id="generatedLink" style="display: none;">
+            <a id="linkShortUrlAnchor" href="#" target="_blank"><p><span id="linkShortUrl"></span></p></a>
+        </div>
+        <button class="copy-button" id="copyButton" style="display: none;">Copy Link</button>
+        <p class="description" id="description">
+            Discover automatic shortlinks—pre-existing shortcuts to content you can easily share. By using the right keywords, you’ll quickly find the exact link you're looking for.
+        </p>
+    </div>
+    <p class="footer">
+        Powered by Google’s "I'm Feeling Lucky" button. Designed by <a href="https://nathanpuls.com">Nathan Puls</a>.
+    </p>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const clearIcon = document.getElementById('clearIcon');
+        const generatedLink = document.getElementById('generatedLink');
+        const linkShortUrl = document.getElementById('linkShortUrl');
+        const linkShortUrlAnchor = document.getElementById('linkShortUrlAnchor');
+        const copyButton = document.getElementById('copyButton');
+        const description = document.getElementById('description');
+
+        // Show/hide clear icon and generate link dynamically
+        searchInput.addEventListener('input', () => {
+            clearIcon.style.display = searchInput.value ? 'block' : 'none';
+            const query = searchInput.value.trim();
+            if (query) {
+                const urlFriendlyQuery = query.replace(/\s+/g, '+');
+                const fullLink = `https://linksaw.com/${urlFriendlyQuery}`;
+                const shortLink = `linksaw.com/${urlFriendlyQuery}`;
+                linkShortUrl.textContent = shortLink;
+                linkShortUrlAnchor.href = fullLink;
+                generatedLink.style.display = 'block';
+                copyButton.style.display = 'block';
+                description.style.display = 'none'; // Hide description
+            } else {
+                generatedLink.style.display = 'none';
+                copyButton.style.display = 'none';
+                description.style.display = 'block'; // Show description
+            }
+        });
+
+        // Clear input and reset
+        clearIcon.addEventListener('click', () => {
+            searchInput.value = '';
+            clearIcon.style.display = 'none';
+            generatedLink.style.display = 'none';
+            copyButton.style.display = 'none';
+            description.style.display = 'block'; // Show description
+            searchInput.focus();
+        });
+
+        // Copy link to clipboard
+        copyButton.addEventListener('click', () => {
+            const fullLink = linkShortUrlAnchor.href;
+            const tempInput = document.createElement('input');
+            tempInput.value = fullLink;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            copyButton.textContent = 'Copied!';
+            setTimeout(() => (copyButton.textContent = 'Copy Link'), 2000);
+        });
+
+        // Redirect to link on Enter key
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const query = searchInput.value.trim();
+                if (query) {
+                    const urlFriendlyQuery = query.replace(/\s+/g, '+');
+                    const fullLink = `https://linksaw.com/${urlFriendlyQuery}`;
+                    window.location.href = fullLink;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
