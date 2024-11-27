@@ -153,7 +153,7 @@ searchInput.addEventListener('input', () => {
         // Convert the query to lowercase before creating the link
         const lowercaseQuery = query.toLowerCase();
         const urlFriendlyQuery = lowercaseQuery.replace(/\s+/g, '+');
-        const fullLink = `https://linksaw.com/${urlFriendlyQuery}`;
+        const fullLink = `linksaw.com/${urlFriendlyQuery}`;
         const shortLink = `linksaw.com/${urlFriendlyQuery}`;
         linkShortUrl.textContent = shortLink;
         linkShortUrlAnchor.href = fullLink;
