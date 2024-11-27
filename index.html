@@ -18,7 +18,7 @@
             align-items: center;
             flex-direction: column;
             height: 100vh;
-            background-color: #f4f4f9;
+            background-color: white;
             color: #333;
             padding-top: 5%;
         }
@@ -82,12 +82,12 @@
 
         .description {
             margin-top: 15px;
-            font-size: 1rem;
+            font-size: 0.8rem;
             color: #666;
         }
 
         #generatedLink {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             margin-top: 10px;
         }
 
@@ -125,9 +125,10 @@
             <button class="clear-icon" id="clearIcon" title="Clear">&#x2715;</button>
         </div>
         <div id="generatedLink" style="display: none;">
-            <a id="linkShortUrlAnchor" href="#" target="_blank"><p><span id="linkShortUrl"></span></p></a>
+            <a id="linkShortUrlAnchor" href="#"><span id="linkShortUrl"></span></a>
         </div>
         <button class="copy-button" id="copyButton" style="display: none;">Copy Link</button>
+        <br>
         <p class="description" id="description">
             Discover automatic shortlinks—pre-existing shortcuts to content you can easily share. By using the right keywords, you’ll quickly find the exact link you're looking for.
         </p>
@@ -145,63 +146,68 @@
         const copyButton = document.getElementById('copyButton');
         const description = document.getElementById('description');
 
-        // Show/hide clear icon and generate link dynamically
-        searchInput.addEventListener('input', () => {
-            clearIcon.style.display = searchInput.value ? 'block' : 'none';
+        // Helper function to update the link UI
+        function updateLinkUI() {
             const query = searchInput.value.trim();
+            clearIcon.style.display = query ? 'block' : 'none';
             if (query) {
                 const lowercaseQuery = query.toLowerCase();
                 const urlFriendlyQuery = lowercaseQuery.replace(/\s+/g, '+');
-                const fullLink = `https://linksaw.com/${urlFriendlyQuery}`;  // Full URL for redirection
-                const shortLink = `linksaw.com/${urlFriendlyQuery}`;  // Short URL for copying
+                const fullLink = `https://linksaw.com/${urlFriendlyQuery}`;
+                const shortLink = `linksaw.com/${urlFriendlyQuery}`;
                 linkShortUrl.textContent = shortLink;
-                linkShortUrlAnchor.href = fullLink;  // Use full URL for actual redirection
+                linkShortUrlAnchor.href = fullLink;
                 generatedLink.style.display = 'block';
                 copyButton.style.display = 'block';
-                description.style.display = 'none'; // Hide description
+                description.style.display = 'none';
             } else {
                 generatedLink.style.display = 'none';
                 copyButton.style.display = 'none';
-                description.style.display = 'block'; // Show description
+                description.style.display = 'block';
             }
-        });
+        }
 
-        // Clear input and reset
+        // Event listener for input changes
+        searchInput.addEventListener('input', updateLinkUI);
+
+        // Clear button functionality
         clearIcon.addEventListener('click', () => {
             searchInput.value = '';
-            clearIcon.style.display = 'none';
-            generatedLink.style.display = 'none';
-            copyButton.style.display = 'none';
-            description.style.display = 'block'; // Show description
+            updateLinkUI();
             searchInput.focus();
         });
 
         // Copy link to clipboard
         copyButton.addEventListener('click', () => {
-            const shortLink = linkShortUrlAnchor.href.replace('https://', '');  // Use short link for copying (without https)
-            const tempInput = document.createElement('input');
-            tempInput.value = shortLink;  // Copy short link to clipboard
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-
-            copyButton.textContent = 'Copied!';
-            setTimeout(() => (copyButton.textContent = 'Copy Link'), 2000);
+            const shortLink = linkShortUrlAnchor.href.replace('https://', '');
+            navigator.clipboard.writeText(shortLink).then(() => {
+                copyButton.textContent = 'Copied!';
+                setTimeout(() => (copyButton.textContent = 'Copy Link'), 2000);
+            });
         });
 
-        // Redirect to link on Enter key
+        // Redirect on Enter key
         searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 const query = searchInput.value.trim();
                 if (query) {
                     const lowercaseQuery = query.toLowerCase();
                     const urlFriendlyQuery = lowercaseQuery.replace(/\s+/g, '+');
-                    const fullLink = `https://linksaw.com/${urlFriendlyQuery}`;  // Full URL for redirection
+                    const fullLink = `https://linksaw.com/${urlFriendlyQuery}`;
                     window.location.href = fullLink;
                 }
             }
         });
+
+        // Handle back button navigation
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted || performance.getEntriesByType('navigation')[0].type === 'back_forward') {
+                updateLinkUI();
+            }
+        });
+
+        // Initialize link UI on page load
+        window.addEventListener('load', updateLinkUI);
     </script>
 </body>
 </html>
