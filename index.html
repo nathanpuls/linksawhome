@@ -150,11 +150,12 @@
             clearIcon.style.display = searchInput.value ? 'block' : 'none';
             const query = searchInput.value.trim();
             if (query) {
-                const urlFriendlyQuery = query.replace(/\s+/g, '+');
-                const fullLink = `https://linksaw.com/${urlFriendlyQuery}`;
-                const shortLink = `linksaw.com/${urlFriendlyQuery}`;
+                const lowercaseQuery = query.toLowerCase();
+                const urlFriendlyQuery = lowercaseQuery.replace(/\s+/g, '+');
+                const fullLink = `https://linksaw.com/${urlFriendlyQuery}`;  // Full URL for redirection
+                const shortLink = `linksaw.com/${urlFriendlyQuery}`;  // Short URL for copying
                 linkShortUrl.textContent = shortLink;
-                linkShortUrlAnchor.href = fullLink;
+                linkShortUrlAnchor.href = fullLink;  // Use full URL for actual redirection
                 generatedLink.style.display = 'block';
                 copyButton.style.display = 'block';
                 description.style.display = 'none'; // Hide description
@@ -177,9 +178,9 @@
 
         // Copy link to clipboard
         copyButton.addEventListener('click', () => {
-            const fullLink = linkShortUrlAnchor.href;
+            const shortLink = linkShortUrlAnchor.href.replace('https://', '');  // Use short link for copying (without https)
             const tempInput = document.createElement('input');
-            tempInput.value = fullLink;
+            tempInput.value = shortLink;  // Copy short link to clipboard
             document.body.appendChild(tempInput);
             tempInput.select();
             document.execCommand('copy');
@@ -194,8 +195,9 @@
             if (e.key === 'Enter') {
                 const query = searchInput.value.trim();
                 if (query) {
-                    const urlFriendlyQuery = query.replace(/\s+/g, '+');
-                    const fullLink = `https://linksaw.com/${urlFriendlyQuery}`;
+                    const lowercaseQuery = query.toLowerCase();
+                    const urlFriendlyQuery = lowercaseQuery.replace(/\s+/g, '+');
+                    const fullLink = `https://linksaw.com/${urlFriendlyQuery}`;  // Full URL for redirection
                     window.location.href = fullLink;
                 }
             }
