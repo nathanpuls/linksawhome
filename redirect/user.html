@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirect Page</title>
+    <script>
+        // Function to get URL parameters
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Check if 'user' parameter exists and redirect
+        window.onload = function() {
+            const userParam = getUrlParameter('user');
+            if (userParam) {
+                const redirectUrl = `https://linksaw.com/?user=${userParam}`;
+                window.location.href = redirectUrl;  // Redirect to the constructed URL
+            } else {
+                // Optionally, handle the case where 'user' parameter is not found
+                alert("No 'user' parameter found in the URL.");
+            }
+        };
+    </script>
+</head>
+
+</html>
