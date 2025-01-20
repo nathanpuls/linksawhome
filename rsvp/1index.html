@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSVP</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+
+    h1 {
+      font-size: 2em;
+    }
+
+    p {
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <h1>RSVP</h1>
+  <p>If you are here, your name will be added to the RSVP list.</p>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('id');  // Extracts the 'id' parameter from URL
+
+    if (name) {
+      const webAppUrl = 'https://script.google.com/macros/s/AKfycbzixGphGURwWlQn-206GxHKxAaRp-u0QR84JHbTV1YuJ0BK4wIGjgBoXtrHSux0xAFACw/exec' + '?id=' + name; // Replace with your Google Apps Script web app URL
+      fetch(webAppUrl)
+        .then(response => response.text())
+        .then(data => {
+          alert(data);  // Shows the response from the Google Apps Script
+        })
+        .catch(error => {
+          alert('Error: ' + error);
+        });
+    } else {
+      alert('No name provided in the URL.');
+    }
+  </script>
+</body>
+</html>

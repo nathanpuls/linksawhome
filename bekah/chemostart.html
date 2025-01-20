@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemotherapy Monitoring Schedule</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="date"] {
+            margin-bottom: 20px;
+        }
+        .output {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .copy-button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chemotherapy Monitoring Schedule</h1>
+    <label for="startDate">Choose a start date for chemotherapy:</label>
+    <input type="date" id="startDate">
+    <button onclick="generateSchedule()">Generate Schedule</button>
+    <div class="output" id="output"></div>
+    <button id="copyButton" class="copy-button" onclick="copyToClipboard()">Copy Text</button>
+
+    <script>
+        function generateSchedule() {
+            const startDateInput = document.getElementById('startDate').value;
+            if (!startDateInput) {
+                alert('Please select a start date.');
+                return;
+            }
+
+            // Create date with CST timezone adjustment
+            const startDate = new Date(`${startDateInput}T12:00:00`); // Noon to avoid timezone shift
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+
+            function addDays(date, days) {
+                const result = new Date(date);
+                result.setDate(result.getDate() + days);
+                return result;
+            }
+
+            // Calculate chemotherapy monitoring schedule
+            const week2 = addDays(startDate, 14);
+            const week4 = addDays(startDate, 28);
+            const week6 = addDays(startDate, 42);
+            const week8 = addDays(startDate, 56);
+            const week12 = addDays(startDate, 84);
+
+            const output = `
+                <p>Patient started *** on ${startDate.toLocaleDateString('en-US', options)}. @HE@ will need the following safety monitoring:</p>
+                <ul>
+                    
+                    <li>Week 2 - (due ${week2.toLocaleDateString('en-US', options)}): ALT, AST, CBC with diff with RTM visit</li>
+                    <li>Week 4 - (due ${week4.toLocaleDateString('en-US', options)}): CMP, Mg, Phos, CBC with diff, TSH, free T4, calcitonin, CEA, UA, urine protein/creatinine ratio, and 12-lead EKG and visit with local oncologist for symptom assessment</li>
+                    <li>Week 6 - (due ${week6.toLocaleDateString('en-US', options)}): ALT, AST, CBC with diff with RTM visit</li>
+                    <li>Week 8 - (due ${week8.toLocaleDateString('en-US', options)}): CMP, Mg, Phos, CBC with diff, TSH, free T4, calcitonin, CEA, UA, urine protein/creatinine ratio, and 12-lead EKG and visit with local oncologist for symptom assessment</li>
+                    <li>Week 12 - (due ${week12.toLocaleDateString('en-US', options)}): visit with Dr. Hu at MDA with preclinic labs, EKG, and ***</li>
+                </ul>
+            `;
+            document.getElementById('output').innerHTML = output;
+        }
+
+        function copyToClipboard() {
+            const output = document.getElementById('output');
+            const range = document.createRange();
+            range.selectNode(output);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+           // alert('Text copied to clipboard!');
+           document.getElementById('copyButton').innerText = 'Copied!';
+           setTimeout(() => {
+            document.getElementById('copyButton').innerText = 'Copy Text';
+        }, 2000); // Reset after 2 seconds
+        }
+    </script>
+</body>
+</html>

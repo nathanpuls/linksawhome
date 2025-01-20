@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Note</title>
+    <link rel="stylesheet" href="../css.css">
+    <style>
+        h1 {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+     <a href='/'>
+      <h3 style="font-weight: 400">
+        <img
+          src="../logo.svg"
+          alt="logo"
+          style="margin-right: 10px; margin-left: 5px"
+        />
+        PINNED.AT
+      </h3>
+        </a>
+    
+    <div id="notification">Copied note</div>
+    <div id="raindrop"><a href="https://app.raindrop.io/my/42287170"><img src="../raindrop.png" alt="raindrop"></a></div>
+    <script>
+       // JavaScript code
+const collectionId = 42287170;
+const apiEndpoint = `https://api.raindrop.io/rest/v1/raindrops/${collectionId}`;
+const authToken = "Bearer 0f1d16de-033f-4d92-9a50-e37992ed9b94";
+
+const requestOptions = {
+  method: "GET",
+  headers: new Headers({
+    Authorization: authToken,
+  }),
+  redirect: "follow",
+};
+
+fetch(apiEndpoint, requestOptions)
+  .then((response) => response.json())
+  .then((data) => {
+    // Sort items by date (assuming items have a 'created' timestamp)
+    data.items.sort((a, b) => new Date(b.created) - new Date(a.created));
+
+    // Get the title parameter from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const titleToMatch = urlParams.get('title');
+    document.title = titleToMatch;
+
+    // Find the first item that matches the title parameter
+    const matchingItem = data.items.find(item => item.title === titleToMatch);
+
+    if (matchingItem) {
+      // Display the matching item
+      const h1 = document.createElement("h1");
+      const linkList = document.createElement("ul");
+      const listItem = document.createElement("li");
+      const link = document.createElement("p");
+      
+      h1.textContent = matchingItem.title;
+      link.textContent = matchingItem.note || matchingItem.title;
+
+      const copyButton = document.createElement("button");
+      copyButton.innerHTML = '<img src="../clone.svg" alt="Copy">';
+      copyButton.className = "copy-button";
+      copyButton.addEventListener("click", () => {
+        // matchingItem.note = matchingItem.note.toLowerCase();
+        if (matchingItem.note) {
+          
+          copyToClipboard(matchingItem.note);
+          console.log(matchingItem.note);
+        } else {
+          copyToClipboard(matchingItem.link);
+          console.log(matchingItem.link);
+        }
+        showNotification();
+      });
+      
+
+      document.body.appendChild(h1);
+      listItem.appendChild(link);
+      linkList.appendChild(listItem);
+      listItem.appendChild(copyButton);
+      document.body.appendChild(linkList);
+    } else {
+      console.error("No matching item found for the provided title parameter.");
+      const noNote = document.createElement('h1');
+      noNote.textContent = 'Nothing here';
+      document.body.appendChild(noNote);
+    }
+  })
+  .catch((error) => {
+    console.error("Error fetching apiEndpoint:", error);
+  });
+
+function copyToClipboard(text) {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
+}
+
+function showNotification() {
+  const notification = document.getElementById("notification");
+  notification.style.display = "block";
+  setTimeout(() => {
+    notification.style.display = "none";
+  }, 2000); // Hide the notification after 2 seconds
+}
+
+document.addEventListener('keydown', (event) => {
+  if (event.keyCode === 37 && history.length > 1) {
+    history.back();
+  }
+});
+
+
+      </script>
+</body>
+</html>

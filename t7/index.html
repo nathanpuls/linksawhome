@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>linksaw</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+ body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#brand {
+    cursor: pointer;
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    color: black;
+    background-size: cover;
+    -webkit-background-clip: text;
+    background-clip: text;
+    padding-top: 30px;
+    margin-bottom: 10px;
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    padding: 10px 20px;
+    width: 100%;
+    max-width: 600px; /* Limit width for larger screens */
+    box-sizing: border-box; /* Ensures padding doesn't cause overflow */
+}
+
+.search-icon {
+    margin-right: 10px;
+    font-size: 20px;
+    color: #555;
+}
+
+.search-bar {
+    width: 100%;
+    padding: 15px;
+    padding-left: 5px;
+    font-size: 16px;
+    border-radius: 30px;
+    height: 30px;
+    border: none;
+    outline: none;
+    box-sizing: border-box; /* Ensures padding doesn't cause overflow */
+    font-family: 'Poppins', sans-serif;
+}
+
+.suggestions {
+    position: absolute;
+    top: 100%; /* Position below the input */
+    left: 0;
+    width: 100%; /* Ensure suggestions span the full width */
+    margin-top: 5px;
+    background-color: white;
+    border-radius: 15px;
+    border: 1px solid #ffffff !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: none; /* Hide by default */
+    z-index: 10;
+    font-size: 16px;
+    padding-left: 15px;
+    box-sizing: border-box; /* Include padding and border in width calculation */
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.suggestion-item span {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.suggestion-item:hover {
+    background-color: rgba(196, 196, 196, 0.2);
+}
+
+.suggestion-item .number {
+    color: rgb(185, 185, 185);
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+/* Media Query for mobile view */
+@media (max-width: 767px) {
+    .search-container {
+        padding: 5px 10px; /* Adjust padding for smaller screens */
+        width: 100%; /* Ensure full width on mobile */
+    }
+
+    .search-bar {
+        font-size: 16px; /* Smaller font size for mobile */
+        padding: 10px; /* Adjust padding */
+    }
+}
+
+/* Media Query for larger screens (Desktop) */
+@media (min-width: 768px) {
+    .search-bar, .suggestions {
+        width: 600px; /* Width for desktop */
+    }
+}
+
+</style>
+</head>
+
+<body>
+    <h1 id="brand">linksaw</h1>
+    
+    <div class="search-container">
+        <i id="icon" class="fas fa-search search-icon"></i>
+        <input type="text" id="searchInput" class="search-bar" oninput="showSuggestions()" onkeydown="handleKeydown(event)" autofocus placeholder="" autocomplete="off">
+        <div id="suggestions" class="suggestions"></div>
+    </div>
+
+    <script>
+        const inputSeparator = ': ';
+        
+        // Define the function to handle clearing input, hiding suggestions, and focusing the input
+function handleBrandClick() {
+    const input = document.getElementById('searchInput');
+    input.value = ''; // Clear the input field
+    const suggestionsBox = document.getElementById('suggestions');
+    suggestionsBox.style.display = 'none'; // Hide suggestions
+    input.focus(); // Focus on the input field
+    showSuggestions(); // Call the function to show suggestions again (you may want to modify showSuggestions if needed)
+}
+
+function handleIconClick() {
+    const input = document.getElementById('searchInput');
+    input.focus(); // Focus on the input field
+     
+}
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === ' ' || event.keyCode === 32) {  // Spacebar key
+        const input = document.getElementById('searchInput');
+        input.focus();
+    }
+});
+
+
+// Add event listeners for both the brand and icon elements
+document.getElementById('brand').addEventListener('click', handleBrandClick);
+document.getElementById('icon').addEventListener('click', handleIconClick);
+
+
+        window.onload = function () {
+            document.getElementById('searchInput').focus();
+            suggestionsBox.style.display = 'none';
+        };
+
+        let suggestionsData = [];
+
+        fetch('suggestions.txt')
+            .then(response => response.text())
+            .then(data => {
+                suggestionsData = parseSuggestions(data);
+                console.log('Suggestions loaded:', suggestionsData);
+            })
+            .catch(error => console.error('Error loading suggestions:', error));
+
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsBox = document.getElementById('suggestions');
+
+        function parseSuggestions(data) {
+            const lines = data.split('\n');
+            return lines.map(line => {
+                const firstCommaIndex = line.indexOf(':');
+                if (firstCommaIndex !== -1) {
+                    const label = line.slice(0, firstCommaIndex).trim();
+                    const url = line.slice(firstCommaIndex + 1).trim();
+                    return { label, url };
+                }
+                return null;
+            }).filter(item => item);
+        }
+
+        function showSuggestions() {
+            const query = searchInput.value.trim();
+            console.log('Search query:', query);
+
+            suggestionsBox.innerHTML = '';
+
+            if (query.length === 0 || suggestionsData.filter(item => item.label.toLowerCase().includes(query.toLowerCase())).length === 0) {
+                suggestionsBox.style.display = 'none';
+                console.log('No query entered or no matching suggestion found. Suggestions hidden.');
+                return;
+            }
+
+            suggestionsBox.style.display = 'block';
+            suggestionsBox.style.border = '2px solid #ddd';
+            console.log('Suggestions displayed.');
+
+            const filteredSuggestions = suggestionsData.filter(item => {
+                return item.label.toLowerCase().includes(query.toLowerCase());
+            });
+
+            const sortedSuggestions = filteredSuggestions.sort((a, b) => {
+                const queryLetter = query.charAt(0).toLowerCase();
+                const aStartsWithQueryLetter = a.label.toLowerCase().startsWith(queryLetter);
+                const bStartsWithQueryLetter = b.label.toLowerCase().startsWith(queryLetter);
+
+                if (aStartsWithQueryLetter && !bStartsWithQueryLetter) return -1;
+                if (!aStartsWithQueryLetter && bStartsWithQueryLetter) return 1;
+                return 0;
+            });
+
+            const limitedSuggestions = sortedSuggestions.slice(0, 8);
+            console.log('Limited suggestions (top 8):', limitedSuggestions);
+
+            limitedSuggestions.forEach((suggestion, index) => {
+                const suggestionElement = document.createElement('div');
+                suggestionElement.classList.add('suggestion-item');
+                suggestionElement.innerHTML = `<span class="number">${index + 1}</span>&nbsp;&nbsp;&nbsp;${suggestion.label}`;
+                suggestionElement.onclick = () => selectSuggestion(suggestion);
+                suggestionsBox.appendChild(suggestionElement);
+            });
+        }
+
+        function handleKeydown(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const query = searchInput.value.trim();
+
+                const urlPattern = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/;
+                if (urlPattern.test(query)) {
+                    const fullUrl = query.startsWith('http://') || query.startsWith('https://') ? query : 'http://' + query;
+                    window.location.href = fullUrl;
+                } else {
+                    if (!query.includes(':')) {
+                        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                        window.location.href = searchUrl;
+                    } else {
+                        const [labelPart, ...searchTerms] = query.split(inputSeparator);
+                        const searchQuery = searchTerms.join(' ').trim();
+
+                        const matchingSuggestion = suggestionsData.find(item => {
+                            const cleanedLabelPart = labelPart.trim().replace(/:/g, '').toLowerCase();
+                            return item.label.toLowerCase() === cleanedLabelPart;
+                        });
+
+                        if (matchingSuggestion) {
+                            let url = matchingSuggestion.url;
+
+                            if (url.includes('$')) {
+                                url = url.replace('$', encodeURIComponent(searchQuery));
+                            }
+
+                            window.location.href = url;
+                        } else {
+                            console.log('No matching suggestion found.');
+                        }
+                    }
+                }
+            }
+
+            const number = parseInt(event.key, 10);
+            if (!isNaN(number) && number >= 1 && number <= 9) {
+                const suggestionElements = document.querySelectorAll('.suggestion-item');
+                const index = number - 1;
+                if (index < suggestionElements.length) {
+                    event.preventDefault();
+                    suggestionElements[index].click();
+                }
+            }
+        }
+
+        function selectSuggestion(suggestion) {
+            searchInput.value = suggestion.label + inputSeparator;
+            suggestionsBox.innerHTML = '';
+            searchInput.focus();
+        }
+
+        document.addEventListener('click', function (event) {
+            if (!searchInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
+                suggestionsBox.style.display = 'none';
+            }
+        });
+
+        searchInput.addEventListener('focus', function () {
+            if (searchInput.value.trim().length > 0) {
+                suggestionsBox.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

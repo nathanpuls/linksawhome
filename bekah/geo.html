@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Address Autocomplete</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .autocomplete-container {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .address-list {
+            margin-top: 10px;
+            padding-left: 0;
+        }
+        .address-item {
+            list-style-type: none;
+            padding: 10px;
+            background-color: #f0f0f0;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .address-item button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .address-item button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Address Autocomplete</h1>
+
+    <div class="autocomplete-container">
+        <label for="address-input">Enter address:</label>
+        <input type="text" id="address-input" placeholder="Start typing an address...">
+    </div>
+
+    <ul id="address-list" class="address-list"></ul>
+
+    <script>
+        const apiKey = 'b8c9206839b14790baad3841b6bb4a6a'; // Replace with your Geoapify API key
+        const addressInput = document.getElementById('address-input');
+        const addressList = document.getElementById('address-list');
+
+        // Get user's location
+        function getUserLocation() {
+            return new Promise((resolve, reject) => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        position => resolve(position.coords),
+                        error => reject(error)
+                    );
+                } else {
+                    reject('Geolocation is not supported by this browser.');
+                }
+            });
+        }
+
+        addressInput.addEventListener('input', async function() {
+            const query = addressInput.value.trim();
+
+            if (query.length > 3) {  // Trigger API call if input length is greater than 3 characters
+                try {
+                    const location = await getUserLocation();
+                    const lat = location.latitude;
+                    const lon = location.longitude;
+
+                    fetch(`https://api.geoapify.com/v1/geocode/autocomplete?text=${query}&lat=${lat}&lon=${lon}&apiKey=${apiKey}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const addresses = data.features;
+                            addressList.innerHTML = '';  // Clear the list before displaying new results
+
+                            addresses.forEach(address => {
+                                const li = document.createElement('li');
+                                li.classList.add('address-item');
+                                li.innerHTML = `
+                                    <span>${address.properties.formatted}</span>
+                                    <button onclick="copyAddress('${address.properties.formatted}')"><i class="fas fa-copy"></i> Copy</button>
+                                `;
+                                addressList.appendChild(li);
+                            });
+                        })
+                        .catch(error => console.error('Error fetching addresses:', error));
+                } catch (error) {
+                    console.error('Error getting location:', error);
+                }
+            } else {
+                addressList.innerHTML = '';  // Clear list if query is too short
+            }
+        });
+
+        function copyAddress(address) {
+            navigator.clipboard.writeText(address)
+                .then(() => {
+                    alert('Address copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Error copying address:', err);
+                });
+        }
+    </script>
+</body>
+</html>

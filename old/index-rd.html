@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linksaw</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap"
+    />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="stylesheet" href="css.css" />
+    
+  </head>
+  <body>
+    
+    <h3 style="font-weight: 400">
+      <img
+        src="logo.svg"
+        alt="logo"
+        style="margin-right: 10px; margin-left: 5px"
+      />
+      Linksaw
+    </h3>
+    
+
+    <div id="notification">Copied link</div>
+
+    <div id="raindrop"><a href="https://app.raindrop.io/my/42287170"><img src="raindrop.png" alt="raindrop"></a></div>
+
+    <script>
+      // JavaScript code
+      const collectionId = 42287170;
+      const apiEndpoint = `https://api.raindrop.io/rest/v1/raindrops/${collectionId}`;
+      const authToken = "Bearer 0f1d16de-033f-4d92-9a50-e37992ed9b94";
+
+      const requestOptions = {
+        method: "GET",
+        headers: new Headers({
+          Authorization: authToken,
+        }),
+        redirect: "follow",
+      };
+
+      fetch(apiEndpoint, requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          // Sort items by date (assuming items have a 'created' timestamp)
+          data.items.sort((a, b) => new Date(b.created) - new Date(a.created));
+
+          
+
+          // Display links in a list
+          const linkList = document.createElement("ul");
+
+          data.items.forEach((item) => {
+            const listItem = document.createElement("li");
+            const link = document.createElement("a");
+            link.href = item.link;
+            link.target = '_blank';
+            link.textContent = item.title || item.link; // Use the title if available, otherwise use the link
+
+            const copyButton = document.createElement("button");
+            copyButton.innerHTML = '<img src="clone.svg" alt="Copy">';
+
+            const noteButton = document.createElement("button");
+            noteButton.innerHTML = '<img src="note.svg" alt="note">';
+
+            copyButton.className = "copy-button";
+            copyButton.addEventListener("click", () => {
+              item.note = item.note.toLowerCase();
+              // Check if item.note exists
+              if (item.note) {
+                item.note = item.note.replace(/ /g, '+');
+                copyToClipboard(`https://Linksaw/${item.note}`);
+                console.log(`https://Linksaw/${item.note}`);
+                
+                
+                
+              } else {
+                // If item.note does not exist, use item.link
+                copyToClipboard(item.link);
+                console.log(item.link);
+                
+              }
+
+              showNotification();
+              
+            });
+
+            noteButton.className = "note-button";
+            noteButton.addEventListener("mouseover", () => {
+              
+              // Check if item.note exists
+              if (item.note) {
+                window.location.href = `/note/?title=${item.title}`;
+              }
+            });
+
+            listItem.appendChild(copyButton);
+            listItem.appendChild(link);
+            if (item.note) {
+            listItem.appendChild(noteButton);
+            }
+            linkList.appendChild(listItem);
+          });
+
+          // Append the list to the body
+          document.body.appendChild(linkList);
+        })
+        .catch((error) => {
+          console.error("Error fetching apiEndpoint:", error);
+        });
+
+      function copyToClipboard(text) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+
+      function showNotification() {
+        const notification = document.getElementById("notification");
+        notification.style.display = "block";
+        setTimeout(() => {
+          notification.style.display = "none";
+        }, 2000); // Hide the notification after 2 seconds
+      }
+    </script>
+  </body>
+</html>

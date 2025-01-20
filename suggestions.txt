@@ -1,0 +1,135 @@
+Bible.com	:	https://duckduckgo.com/?q=!bible+$
+Google	:	https://www.google.com/search?q=$
+YouTube	:	https://www.youtube.com/results?search_query=$
+Define Word	:	https://www.google.com/search?q=define+$
+Google Maps	:	https://www.google.com/maps/search/$
+Thesaurus	:	https://www.thesaurus.com/browse/$
+Google Synonyms	:	https://www.google.com/search?q=$+synonyms
+Amazon	:	https://www.amazon.com/s?k=$
+GoDaddy	:	https://www.godaddy.com/domainsearch/find?domainToCheck=$
+Reviews	:	https://www.google.com/search?q=$+reviews
+Wikipedia	:	https://wikipedia.org/wiki/$
+HEB	:	https://www.heb.com/search/?q=$
+Google Images	:	https://www.google.com/search?q=$&tbm=isch
+Weather	:	https://www.google.com/search?q=weather+$
+Google News	:	https://news.google.com/search?q=$
+Gmail	:	https://mail.google.com/mail/u/0/#search/$
+Google Calendar	:	https://calendar.google.com/calendar/u/0/r/search?q=$
+Google Docs	:	https://docs.google.com/document/u/0/?q=$
+Google Drive	:	https://drive.google.com/drive/search?q=$
+Google Sheets	:	https://docs.google.com/spreadsheets/u/0/?q=$
+Apple Music	:	https://music.apple.com/us/search?term=$
+Amazon Prime	:	https://www.amazon.com/s?k=$&i=instant-video
+Libby	:	https://libbyapp.com/search/hcpl/search/query-$/page-1
+Google Photos	:	https://photos.google.com/search/$
+Google Keep	:	https://keep.google.com/#search/text%253D$
+YouTube TV	:	https://tv.youtube.com/search/$
+Google Voice	:	https://voice.google.com/u/0/search?from=%5B%5D&q=%5B%22$%22%5D
+Drugs.com	:	https://www.drugs.com/search.php?searchterm=$
+Google "Recipe"	:	https://www.google.com/search?q=$+best+healthy+recipe+less+ingredients
+Google Translate	:	https://translate.google.com/?sl=auto&tl=en&text=$&op=translate
+Whole Foods	:	https://www.wholefoodsmarket.com/search?text=$
+FedEx	:	https://www.fedex.com/fedextrack/?tracknumbers=$
+Food Near Me	:	https://www.google.com/search?q=food+near+me
+Where to Watch	:	https://www.google.com/search?q=where+to+watch+$
+Medscape	:	https://search.medscape.com/search/?q=$
+# New Google Sheet	:	https://docs.google.com/spreadsheets/u/0/create
+# New Google Doc	:	https://docs.google.com/document/u/0/create
+Emojipedia	:	https://emojipedia.org/search?q=$
+# New Gmail	:	https://mail.google.com/mail/u/0/#inbox?compose=new
+Codepen	:	https://codepen.io/search/pens?q=$
+# Codepen New Pen	:	https://codepen.io/pen
+IMDB	:	https://www.imdb.com/find/?q=$
+Netflix	:	https://www.netflix.com/search?q=$
+YouTube Trailer	:	https://www.youtube.com/results?search_query=$+trailer
+TLD-list	:	https://tld-list.com/?q=$
+ESV Bible	:	https://duckduckgo.com/?q=!esv+$
+LinkShared	:	https://www.linkshared.io/
+Google I'm Feeling Lucky	:	https://www.google.com/search?btnI=1&q=$
+Google Chrome Extension	:	https://www.google.com/search?q=chrome+extension+$
+Just The Recipe	:	https://www.justtherecipe.com/?url=$
+How to...	:	https://www.google.com/search?q=how+to+$
+Lyrics	:	https://www.google.com/search?q=$+lyrics
+Font Awesome	:	https://fontawesome.com/v6/search?q=$&o=r&m=free
+One Look Short Synonyms	:	https://www.onelook.com/thesaurus/?s=$&sortby=le0
+Translate to English	:	https://www.google.com/search?q=$+in+english
+Translate to Spanish	:	https://www.google.com/search?q=$+in+spanish
+Large Type	:	https://large-type.com/#$
+Who.is : https://who.is/whois/$
+ChatGPT:https://chatgpt.com/?q=$&hints=search&ref=ext
+What is...used for?: https://www.google.com/search?q=what+is+$+used+for
+Rotten Tomatoes:https://www.rottentomatoes.com/search?search=$
+Instagram User:https://www.instagram.com/$
+Facebook User:https://facebook.com/$
+Pinterest:https://www.pinterest.com/search/pins/?q=$
+Reddit:https://www.reddit.com/search/?q=$
+X.com (Twitter) User:https://x.com/$
+TikTok User:https://tiktok.com/@$
+eBay:https://www.ebay.com/sch/i.html?_nkw=$
+Etsy:https://www.etsy.com/search?q=$
+Craigslist:https://www.craigslist.org/search/sss?query=$
+Walmart:https://www.walmart.com/search?q=$
+Costco:https://www.costco.com/CatalogSearch?dept=All&keyword=$
+Carmax	:	https://www.carmax.com/cars?search=$
+Macy's	:	https://www.macys.com/shop/search?keyword=$
+Nordstrom Rack	:	https://www.nordstromrack.com/search?origin=keywordsearch&keyword=$	
+Spotify	:	https://open.spotify.com/search/results/$
+Spotify Audiobooks	:	https://open.spotify.com/search/$/audiobooks
+LinkedIn	:	https://www.linkedin.com/search/results/all/?keywords=$		
+Spotify Podcasts	:	https://open.spotify.com/search/$/podcastAndEpisodes	
+GoodRx	:	https://www.goodrx.com/$
+Venmo	:	https://account.venmo.com/search?q=$
+SoundCloud	:	https://soundcloud.com/search?q=$
+TuneIn Radio	:	https://tunein.com/search/?query=$	
+Target	:	https://www.target.com/s?searchTerm=$
+Groupon	:	https://www.groupon.com/search?query=$
+Instacart	:	https://www.instacart.com/store/s?k=$
+Kroger	:	https://www.kroger.com/search?query=$
+Walgreens	:	https://www.walgreens.com/search/results.jsp?Ntt=$
+Yelp	:	https://www.yelp.com/search?find_desc=$
+Linktree	:	https://linktr.ee/$
+Bitly	:	https://bit.ly/$
+Temu	:	https://www.temu.com/search_result.html?search_key=$
+ESPN	:	https://www.espn.com/search/_/q/$
+Indeed	:	https://www.indeed.com/jobs?q=$
+Fubo	:	https://www.fubo.tv/p/search?query=$
+DoorDash	:	https://www.doordash.com/search/store/$/?event_type=search
+Airbnb (city)	:	https://www.airbnb.com/s/x/homes?query=$
+Vrbo (city)	:	https://www.vrbo.com/search?adults=2&destination=$
+Zillow (zip code)	:	https://www.zillow.com/homes/for_sale/$_rb/
+Har	:	https://www.har.com/search/dosearch?quicksearch=$
+GoodReads	:	https://www.goodreads.com/search?q=$
+Alibaba	:	https://alibaba.com/trade/search?SearchText=$
+New York Times Games	:	https://nytimes.com/games/$
+CVS	:	https://www.cvs.com/search?searchTerm=$
+Amazon Kindle	:	https://www.amazon.com/s?k=$&i=digital-text
+Yahoo	:	https://search.yahoo.com/search?p=$
+Yahoo Mail	:	https://mail.yahoo.com/d/search/$
+FOX News	:	https://www.foxnews.com/search-results/search?q=$
+Home Depot	:	https://www.homedepot.com/s/$
+CNN	:	https://www.cnn.com/search?q=$
+X.com (Twitter) Search	:	https://x.com/search/?q=$
+Lowe's	:	https://www.lowes.com/search?searchTerm=$
+Best Buy	:	https://www.bestbuy.com/site/searchpage.jsp?st=$
+Twitch	:	https://www.twitch.tv/search?term=$	
+IKEA	:	https://www.ikea.com/us/en/search/?q=$
+Kohl's	:	https://www.kohls.com/search.jsp?submit-search=web-regular&search=$
+Nike	:	https://www.nike.com/w?q=$
+Sam's Club	:	https://www.samsclub.com/s/$	
+Randall's	:	https://www.randalls.com/shop/search-results.html?q=$
+Trader Joe's	:	https://www.traderjoes.com/home/search?q=$	
+Houston's First	:	https://houstonsfirst.org/#stq=$
+Google Finance (NASDAQ)	:	https://www.google.com/search?q=nasdaq+$
+Sephora	:	https://www.sephora.com/search?keyword=$
+Built With	:	https://builtwith.com/$
+Nordstrom	:	https://www.nordstrom.com/sr?keyword=$
+Quora	:	https://www.quora.com/search?q=$		
+DuckDuckGo !Bangs	:	https://duckduckgo.com/bangs?q=$
+Github.com	:	https://github.com/search?q=$&type=code
+Sprouts	:	https://shop.sprouts.com/search?search_term=$		
+BuzzFeed	:	https://www.buzzfeed.com/search?q=$
+NYT Connections	:	https://cx.wyr.es
+NYT Mini	:	https://mini.wyr.es
+NYT Spelling Bee	:	https://bee.wyr.es
+Linksaw User:https://linksaw.com/?user=$
+Chrome Bookmarks:chrome://bookmarks/

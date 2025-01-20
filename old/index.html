@@ -32,22 +32,27 @@
             margin-bottom: 15px;
             color: #ff914d;
         }
-
+      
+            /* Centered Container */
         .search-container {
             text-align: center;
             width: 100%;
             max-width: 500px;
             padding: 20px;
+            position: relative; /* Added to allow for positioning the clear button */
         }
 
         .search-input-wrapper {
             position: relative;
+            display: inline-block;
             width: 100%;
+            max-width: 500px;
         }
 
+        /* Search Bar Styling */
         #searchInput {
             width: 100%;
-            padding: 12px 35px 12px 15px;
+            padding: 12px 35px 12px 15px; /* Adjust for the clear icon */
             font-size: 1rem;
             border: 2px solid #ddd;
             border-radius: 25px;
@@ -80,18 +85,31 @@
             color: black;
         }
 
+        /* Description Text */
         .description {
             margin-top: 15px;
             font-size: 1rem;
             color: #666;
         }
 
-        #generatedLink {
-            font-size: 1.5rem;
-            margin-top: 10px;
+        /* Preview Section */
+        .preview {
+            margin-top: 20px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background-color: #fff;
+            max-width: 500px;
+            /*height: 300px;*/
+            margin-left: auto;
+            margin-right: auto;
+            display: none;
         }
 
-        .copy-button {
+        /* Preview Button Styling */
+        .preview-button,
+        .copy-button,
+        .clear-button {
             background-color: #ff914d;
             color: #fff;
             padding: 10px 20px;
@@ -100,21 +118,34 @@
             border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin: 10px auto 0;
-            display: block;
+            display: inline-block;
+            margin-top: 10px;
         }
 
-        .copy-button:hover {
+        .preview-button:hover,
+        .copy-button:hover,
+        .clear-button:hover {
             background-color: #ff7a2e;
         }
 
-        .footer {
-            font-size: 12px;
-            color: #757575;
-            margin-top: auto;
-            padding: 10px 0;
-            text-align: center;
+        /* iframe styling */
+        #previewIframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+            border-radius: 10px;
         }
+      
+      .footer {
+        font-size: 12px;
+        color: #757575;
+        position: absolute;
+        bottom: 10px;
+      }
+      
+      #generatedLink {
+        font-size:1.5rem;
+      }
     </style>
 </head>
 <body>
@@ -124,60 +155,96 @@
             <input type="text" id="searchInput" placeholder="Enter keywords to find your link" required autofocus>
             <button class="clear-icon" id="clearIcon" title="Clear">&#x2715;</button>
         </div>
-        <div id="generatedLink" style="display: none;">
-            <a id="linkShortUrlAnchor" href="#" target="_blank"><p><span id="linkShortUrl"></span></p></a>
-        </div>
-        <button class="copy-button" id="copyButton" style="display: none;">Copy Link</button>
-        <p class="description" id="description">
-            Discover automatic shortlinks—pre-existing shortcuts to content you can easily share. By using the right keywords, you’ll quickly find the exact link you're looking for.
+        <p class="description">
+            Discover automatic shortlinks—pre-existing shortcuts to content you can easily share. By using the right keywords, you’ll quickly find the exact link you're looking for. 
         </p>
+
+        <!-- Preview Button -->
+        <button class="preview-button" id="previewButton">Preview</button>
+
+        <!-- Copy Button -->
+        <button class="copy-button" id="copyButton" style="display: none;">Copy Link</button>
+
+        <!-- Clear Button -->
+        <button class="clear-button" id="clearButton" style="display: none;">Clear</button>
+
+        <!-- Link Preview -->
+        <div id="generatedLink" style="display: none; margin-top: 10px;">
+            <a id="linkShortUrlAnchor" href="#" target="_blank"><p><span id="linkShortUrl"></span></p></a>
+        </div>  
+      
+      <!-- Preview Section with iframe -->
+        <div class="preview" id="previewContainer">
+            <h3>Preview</h3>
+            <iframe id="previewIframe" src="" frameborder="0"></iframe>
+        </div>
+      
     </div>
-    <p class="footer">
+  <p class="footer">
         Powered by Google’s "I'm Feeling Lucky" button. Designed by <a href="https://nathanpuls.com">Nathan Puls</a>.
-    </p>
+      </p>
 
     <script>
         const searchInput = document.getElementById('searchInput');
         const clearIcon = document.getElementById('clearIcon');
+        const previewButton = document.getElementById('previewButton');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewIframe = document.getElementById('previewIframe');
         const generatedLink = document.getElementById('generatedLink');
         const linkShortUrl = document.getElementById('linkShortUrl');
         const linkShortUrlAnchor = document.getElementById('linkShortUrlAnchor');
         const copyButton = document.getElementById('copyButton');
-        const description = document.getElementById('description');
+        const clearButton = document.getElementById('clearButton');
 
-        // Show/hide clear icon and generate link dynamically
+        // Show/hide clear icon based on input
         searchInput.addEventListener('input', () => {
             clearIcon.style.display = searchInput.value ? 'block' : 'none';
+        });
+
+        // Clear input when the clear icon is clicked
+        clearIcon.addEventListener('click', () => {
+            searchInput.value = '';
+            clearIcon.style.display = 'none';
+            previewContainer.style.display = 'none';
+            generatedLink.style.display = 'none';
+            copyButton.style.display = 'none';
+            clearButton.style.display = 'none';
+            previewButton.style.display = 'inline-block';
+            searchInput.focus();
+        });
+
+        // Add event listener for the Preview button
+        previewButton.addEventListener('click', function () {
             const query = searchInput.value.trim();
+
             if (query) {
                 const urlFriendlyQuery = query.replace(/\s+/g, '+');
                 const fullLink = `https://linksaw.com/${urlFriendlyQuery}`;
                 const shortLink = `linksaw.com/${urlFriendlyQuery}`;
+
                 linkShortUrl.textContent = shortLink;
                 linkShortUrlAnchor.href = fullLink;
                 generatedLink.style.display = 'block';
-                copyButton.style.display = 'block';
-                description.style.display = 'none'; // Hide description
+
+                const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}&btnI=I'm+Feeling+Lucky`;
+                previewIframe.src = searchUrl;
+
+                previewContainer.style.display = 'block';
+                copyButton.style.display = 'inline-block';
+                clearButton.style.display = 'none';//'inline-block';
+                previewButton.style.display = 'none';
             } else {
+                previewContainer.style.display = 'none';
                 generatedLink.style.display = 'none';
                 copyButton.style.display = 'none';
-                description.style.display = 'block'; // Show description
+                clearButton.style.display = 'none';
             }
         });
 
-        // Clear input and reset
-        clearIcon.addEventListener('click', () => {
-            searchInput.value = '';
-            clearIcon.style.display = 'none';
-            generatedLink.style.display = 'none';
-            copyButton.style.display = 'none';
-            description.style.display = 'block'; // Show description
-            searchInput.focus();
-        });
-
-        // Copy link to clipboard
-        copyButton.addEventListener('click', () => {
+        // Add event listener for the Copy button
+        copyButton.addEventListener('click', function () {
             const fullLink = linkShortUrlAnchor.href;
+
             const tempInput = document.createElement('input');
             tempInput.value = fullLink;
             document.body.appendChild(tempInput);
@@ -189,17 +256,24 @@
             setTimeout(() => (copyButton.textContent = 'Copy Link'), 2000);
         });
 
-        // Redirect to link on Enter key
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const query = searchInput.value.trim();
-                if (query) {
-                    const urlFriendlyQuery = query.replace(/\s+/g, '+');
-                    const fullLink = `https://linksaw.com/${urlFriendlyQuery}`;
-                    window.location.href = fullLink;
-                }
-            }
+        // Add event listener for the Clear button
+        clearButton.addEventListener('click', function () {
+            searchInput.value = '';
+            previewContainer.style.display = 'none';
+            generatedLink.style.display = 'none';
+            copyButton.style.display = 'none';
+            clearButton.style.display = 'none';
+            previewButton.style.display = 'inline-block';
+            searchInput.focus();
         });
+
+        // Reset form on page load
+        window.onload = function () {
+            generatedLink.style.display = 'none';
+            copyButton.style.display = 'none';
+            clearButton.style.display = 'none';
+            previewButton.style.display = 'inline-block';
+        };
     </script>
 </body>
 </html>

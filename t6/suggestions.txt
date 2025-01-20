@@ -1,0 +1,75 @@
+Bible.com	:	https://duckduckgo.com/?q=!bible+$
+Google	:	https://www.google.com/search?q=$
+YouTube	:	https://www.youtube.com/results?search_query=$
+Define Word	:	https://www.google.com/search?q=define+$
+Google Maps	:	https://www.google.com/maps/search/$
+Thesaurus	:	https://www.thesaurus.com/browse/$
+Google Synonyms	:	https://www.google.com/search?q=$+synonyms
+Amazon	:	https://www.amazon.com/s?k=$
+GoDaddy	:	https://www.godaddy.com/domainsearch/find?domainToCheck=$
+Reviews	:	https://www.google.com/search?q=$+reviews
+Wikipedia	:	https://wikipedia.org/wiki/$
+HEB	:	https://www.heb.com/search/?q=$
+Google Images	:	https://www.google.com/search?q=$&tbm=isch
+Weather	:	https://www.google.com/search?q=weather+$
+Google News	:	https://news.google.com/search?q=$
+Gmail	:	https://mail.google.com/mail/u/0/#search/$
+Google Calendar	:	https://calendar.google.com/calendar/u/0/r/search?q=$
+Google Docs	:	https://docs.google.com/document/u/0/?q=$
+Google Drive	:	https://drive.google.com/drive/search?q=$
+Google Sheets	:	https://docs.google.com/spreadsheets/u/0/?q=$
+Apple Music	:	https://music.apple.com/us/search?term=$
+Amazon Prime	:	https://www.amazon.com/s?k=$&i=instant-video
+Libby	:	https://libbyapp.com/search/hcpl/search/query-$/page-1
+Google Photos	:	https://photos.google.com/search/$
+Google Keep	:	https://keep.google.com/#search/text%253D$
+YouTube TV	:	https://tv.youtube.com/search/$
+Google Voice	:	https://voice.google.com/u/0/search?from=%5B%5D&q=%5B%22$%22%5D
+Drugs.com	:	https://www.drugs.com/search.php?searchterm=$
+Google "Recipe"	:	https://www.google.com/search?q=$+best+healthy+recipe+less+ingredients
+Google Translate	:	https://translate.google.com/?sl=auto&tl=en&text=$&op=translate
+Whole Foods	:	https://www.wholefoodsmarket.com/search?text=$
+FedEx	:	https://www.fedex.com/fedextrack/?tracknumbers=$
+Food Near Me	:	https://www.google.com/search?q=food+near+me
+Where to Watch	:	https://www.google.com/search?q=where+to+watch+$
+Medscape	:	https://search.medscape.com/search/?q=$
+Chat GPT	:	https://chat.openai.com/
+# New Google Sheet	:	https://docs.google.com/spreadsheets/u/0/create
+# New Google Doc	:	https://docs.google.com/document/u/0/create
+Emojipedia	:	https://emojipedia.org/search?q=$
+# New Gmail	:	https://mail.google.com/mail/u/0/#inbox?compose=new
+Codepen	:	https://codepen.io/search/pens?q=$
+# Codepen New Pen	:	https://codepen.io/pen
+Short.io	:	https://app.short.io/users/dashboard/145548/links?limit=150&q=$
+IMDB	:	https://www.imdb.com/find/?q=$
+Netflix	:	https://www.netflix.com/search?q=$
+YouTube Trailer	:	https://www.youtube.com/results?search_query=$+trailer
+TLD-list	:	https://tld-list.com/?q=$
+ESV Bible	:	https://duckduckgo.com/?q=!esv+$
+LinkShared	:	https://www.linkshared.io/
+Google I'm Feeling Lucky	:	https://www.google.com/search?btnI=1&q=$
+nathanpuls.com	:	https://nathanpuls.com/$
+Google Chrome Extension	:	https://www.google.com/search?q=chrome+extension+$
+Just The Recipe	:	https://www.justtherecipe.com/?url=$
+qkrs Redirect	:	https://qk.rs/x
+wyr.es	:	https://wyr.es/$
+ends.at	:	https://ends.at/$
+How to...	:	https://www.google.com/search?q=how+to+$
+Lyrics	:	https://www.google.com/search?q=$+lyrics
+Salary	:	https://www.google.com/search?q=$+salary
+Font Awesome	:	https://fontawesome.com/v6/search?q=$&o=r&m=free
+Doc	:	https://qk.rs/doc
+qk.rs	:	https://qk.rs/$
+One Look Short Synonyms	:	https://www.onelook.com/thesaurus/?s=$&sortby=le0
+Translate to English	:	https://www.google.com/search?q=$+in+english
+Translate to Spanish	:	https://www.google.com/search?q=$+in+spanish
+Lean Domain Search	:	https://leandomainsearch.com/search/?q=$
+Raindrop	:	https://nathanpuls.com/endsatsearch/raindrop/?usernametag=$
+Large Type	:	https://large-type.com/#$
+Who.is : https://who.is/whois/$
+ChatGPT:https://chatgpt.com/?q=$&hints=search&ref=ext
+Google Calendar Date: https://calendar.google.com/calendar/u/0/r/day/2025/$
+Dot Com: http://$.com
+What is...used for?: https://www.google.com/search?q=what+is+$+used+for
+Canvas:https://sts.uttyler.edu/adfs/ls/?SAMLRequest=fZJPTwIxEMXvfopN77vtLv8blgQhRhLUDaAHL6bsDtCk22KnVfn2lkUiHuTWTOc3771phyhqtedj73Z6Ae8e0EVftdLIm4uceKu5ESiRa1EDclfy5fhhzrOE8b01zpRGkQvkOiEQwTppNIlm05y8pVl%2F3Rm0BnG%2FX3bjdhu68aDHwqnqtUWLlSlUHRK9gMXA5CSMCCCih5lGJ7QLJZZ1YpbGaX%2BVMc4Y77RfSTQNOaQWrqF2zu2RU4oOE%2B%2FcQYFNoPJUVBukCimJxmdbE6PR12CXYD9kCc%2BL%2BS9%2BRmWQtr503kJSmpoqs5WaHrOTqPjZyK3UldTb68tYn5qQ369WRVw8LVdkNDzO4U1EOzoqXxE%2BtmZDekkMT8%2F5GLRm08IoWR6iO2Nr4f63kiZpU5FVvGlaOdRCqnFVWUAMy1HKfE4sCAc5CQaA0NFJ9e%2B%2FGd18Aw%3D%3D&SigAlg=http%3A%2F%2Fwww.w3.org%2F2001%2F04%2Fxmldsig-more%23rsa-sha256&Signature=ficf1jSbJEKe715VmKLDWt4PrEUjY75M9Ewlqo3ZoMt5SAMtbyNF0gWamuJXQkiX1nYltEXrhLOaj5paeJtqCkAKh2k83ZNEDs0gRxHGa6C5eJ%2FW8Gs%2BXwu7gTxCSFPR7ERAOCs86SDo6NlmYpIZECqFP78DMxpD8X3hnaGtLZLgaeRxcHfqySqMXSy9WJExgFAVs1H7Mqr7yfIBtqi74btix1c5%2FoeIew12gxnkZPKqqDUmEq4V4jFCFZocWDgeJOgbwkyeiqzgzBTzprptcc%2FS3S3an2SyS9S8%2B5l%2FE6b1TM%2Fui4yHW9Ww5YaL%2FTWhZCicPU3Me2GJWaj5YnC62w%3D%3D
+Github Actions:https://github.com/nathanpuls/$/actions

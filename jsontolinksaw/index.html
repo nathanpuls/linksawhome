@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON to Title:URL Converter</title>
+</head>
+<body>
+    <h1>JSON to Title:URL Converter</h1>
+    <textarea id="jsonInput" rows="10" cols="50" placeholder="Paste your JSON here..."></textarea>
+    <br>
+    <button onclick="convertJson()">Convert</button>
+    <h3>Output:</h3>
+    <pre id="output"></pre>
+
+    <script>
+        function convertJson() {
+            const jsonInput = document.getElementById('jsonInput').value;
+            let output = '';
+
+            try {
+                const data = JSON.parse(jsonInput);
+                output = extractTitleUrl(data);
+            } catch (e) {
+                output = 'Invalid JSON!';
+            }
+
+            document.getElementById('output').textContent = output;
+        }
+
+        function extractTitleUrl(obj) {
+            let result = '';
+
+            function traverse(o) {
+                if (o.title && o.url) {
+                    result += `${o.title} : ${o.url}\n`;
+                }
+                for (let key in o) {
+                    if (typeof o[key] === 'object' && o[key] !== null) {
+                        traverse(o[key]);
+                    }
+                }
+            }
+
+            traverse(obj);
+            return result.trim();
+        }
+    </script>
+</body>
+</html>

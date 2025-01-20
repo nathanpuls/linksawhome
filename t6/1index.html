@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>linksaw</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        #brand {
+            margin-left: 20px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            height: 100px; /* 1/3 of the screen */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 172, 28, 0.8);
+        }
+
+        .search-bar {
+            width: 300px;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 30px;
+            border: 2px solid #ddd;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 15px 15px;
+            max-height: 450px;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+<h3 id="brand">linksaw</h3>
+<div class="search-container">
+    <input type="text" id="searchInput" class="search-bar" oninput="showSuggestions()" onkeydown="handleEnter(event)" autofocus placeholder="Enter website and keywords">
+    <div id="suggestions" class="suggestions"></div>
+</div>
+
+<script>
+    window.onload = function() {
+        document.getElementById('searchInput').focus();
+    };
+
+    let suggestionsData = [];
+
+    // Load suggestions from suggestions.txt
+    fetch('suggestions.txt')
+        .then(response => response.text())
+        .then(data => {
+            suggestionsData = parseSuggestions(data); // Parse the plain text into label and URL pairs
+            console.log('Suggestions loaded:', suggestionsData); // Debugging suggestions
+        })
+        .catch(error => console.error('Error loading suggestions:', error));
+
+    const searchInput = document.getElementById('searchInput');
+    const suggestionsBox = document.getElementById('suggestions');
+
+    let currentQuery = '';
+
+    function parseSuggestions(data) {
+        // Split the data by lines
+        const lines = data.split('\n');
+        return lines.map(line => {
+            // Find the first occurrence of "http://" or "https://"
+            const match = line.match(/(.*?)\s+(https?:\/\/.*)$/);
+            if (match) {
+                return {
+                    label: match[1].trim(),  // Everything before the URL
+                    url: match[2]           // The URL after the label
+                };
+            }
+            return null; // Ignore lines that don't match the pattern
+        }).filter(item => item); // Remove null values
+    }
+
+    function showSuggestions() {
+        const query = searchInput.value.trim();
+        currentQuery = query;
+        console.log('User input:', query); // Debugging user input
+
+        // Clear existing suggestions
+        suggestionsBox.innerHTML = '';
+
+        if (query.length === 0) return;
+
+        // Filter suggestions based on user input
+        const filteredSuggestions = suggestionsData.filter(item =>
+            item.label.toLowerCase().includes(query.toLowerCase()) // Case-insensitive comparison
+        );
+
+        // Limit the suggestions to a maximum of 10
+        const limitedSuggestions = filteredSuggestions.slice(0, 10);
+
+        limitedSuggestions.forEach(suggestion => {
+            const suggestionElement = document.createElement('div');
+            suggestionElement.classList.add('suggestion-item');
+            suggestionElement.textContent = suggestion.label;
+            suggestionElement.onclick = () => selectSuggestion(suggestion);
+            suggestionsBox.appendChild(suggestionElement);
+        });
+    }
+
+    function selectSuggestion(suggestion) {
+        // Set the input value to just the label, clearing the previous input text
+        searchInput.value = suggestion.label + ' ';
+        suggestionsBox.innerHTML = ''; // Clear suggestions
+        searchInput.focus(); // Focus on the input field
+    }
+
+    function handleEnter(event) {
+        if (event.key === 'Enter' && currentQuery.length > 0) {
+            const queryParts = searchInput.value.trim().split(' ');
+
+            // Ensure that we have both label and query
+            if (queryParts.length >= 2) {
+                // The first part is the label (e.g., "Nathan Puls")
+                const searchEngineLabel = queryParts.slice(0, queryParts.length - 1).join(' '); // Join all but last part
+                // Everything after is the search query (e.g., "hi" or "vo")
+                const searchQuery = queryParts[queryParts.length - 1]; // Last part is the actual search query
+
+                console.log('Search engine label:', searchEngineLabel); // Debugging label
+                console.log('Search query:', searchQuery); // Debugging query
+
+                // Find the corresponding URL for the search engine label
+                const engine = suggestionsData.find(item =>
+                    item.label.toLowerCase().startsWith(searchEngineLabel.toLowerCase()) // Improved matching
+                );
+
+                if (engine) {
+                    // Replace the "$" placeholder with the actual search query
+                    const url = engine.url.replace('$', encodeURIComponent(searchQuery));
+
+                    // Redirect to the final URL
+                    console.log('Redirecting to:', url); // Debugging final URL
+                    window.location.href = url;
+                } else {
+                    // Default behavior if no matching label is found
+                    alert('No matching search engine found.');
+                }
+            }
+        }
+    }
+
+</script>
+
+</body>
+</html>

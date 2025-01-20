@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Chrono</title>
+    <!-- Link to Google Fonts to include Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            margin-bottom: 40px;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 20px 40px;
+            font-size: 20px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            background-color: #0096FF;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #007acc;
+        }
+      .all {
+            display: inline-block;
+            padding: 20px 40px;
+            font-size: 20px;
+            text-align: center;
+            color: #0096FF;
+            font-weight: bold;
+            background-color: white;
+        border: 2px solid #0096FF;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dr. Chrono</h1>
+    <div class="button-container">
+        <a id="notes" class="button" href="#" target="_blank">Notes</a>
+        <a id="diagnoses" class="button" href="#" target="_blank">Diagnoses</a>
+        <a id="meds" class="button" href="#" target="_blank">Medications</a>
+        <div id="open-all" class="all">Open All</div>
+    </div>
+    <script>
+        (function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var dynamicID = urlParams.get('id');
+            if (dynamicID) {
+                var notesLink = 'https://sdgrogan.drchrono.com/clinical_note/edit/' + dynamicID + '/all/soap_subjective';
+                var diagnosesLink = 'https://sdgrogan.drchrono.com/clinical_note/edit/' + dynamicID + '/all/soap_assessment';
+                var medsLink = 'https://sdgrogan.drchrono.com/clinical_note/edit/' + dynamicID + '/all/soap_meds_allergies';
+
+                document.getElementById('notes').href = notesLink;
+                document.getElementById('diagnoses').href = diagnosesLink;
+                document.getElementById('meds').href = medsLink;
+
+                document.getElementById('open-all').addEventListener('click', function() {
+                    window.open(notesLink, '_blank');
+                    window.open(diagnosesLink, '_blank');
+                    window.open(medsLink, '_blank');
+                });
+            } else {
+                console.error('No "id" parameter found in the URL.');
+            }
+        })();
+    </script>
+</body>
+</html>

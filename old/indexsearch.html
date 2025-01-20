@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pinned.at</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <style>
+    body {
+      margin: 20px;
+    }
+    
+    .copy-button {
+      cursor: pointer;
+      background: none;
+      border: none;
+      vertical-align: middle;
+    }
+
+    #notification {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background-color: #000000;
+      color: white;
+      padding: 15px;
+      border-radius: 5px;
+      display: none;
+    }
+
+    * {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    a {
+      text-decoration: none;
+      color: black;
+    }
+
+    a:visited {
+      color: black;
+    }
+
+    img {
+      width: 30px;
+    }
+
+    h3 {
+      display: flex;
+      align-items: center;
+    }
+
+    svg {
+      margin-right: 10px;
+      fill: none;
+      stroke: #ccc;
+    }
+
+    #searchInput {
+      margin-bottom: 10px;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h3>
+    <svg width="30px" height="30px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="1.5">
+      <path d="M9.5 14.5L3 21" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+      <path d="M5.00007 9.48528L14.1925 18.6777L15.8895 16.9806L15.4974 13.1944L21.0065 8.5211L15.1568 2.67141L10.4834 8.18034L6.69713 7.78823L5.00007 9.48528Z" fill="red" stroke="red" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+    Pinned.at
+  </h3>
+
+  <input type="text" id="searchInput" placeholder="Search...">
+
+  <div id="notification">Copied link</div>
+  
+  <ul id="linkList"></ul>
+
+  <script>
+    // JavaScript code
+    const collectionId = 42287170;
+    const apiEndpoint = `https://api.raindrop.io/rest/v1/raindrops/${collectionId}`;
+    const authToken = "Bearer 0f1d16de-033f-4d92-9a50-e37992ed9b94";
+
+    const requestOptions = {
+      method: 'GET',
+      headers: new Headers({
+        "Authorization": authToken,
+      }),
+      redirect: 'follow'
+    };
+
+    fetch(apiEndpoint, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        // Sort items by date (assuming items have a 'created' timestamp)
+        data.items.sort((a, b) => new Date(b.created) - new Date(a.created));
+
+        // Display links in a list
+        const linkList = document.getElementById('linkList');
+
+        data.items.forEach(item => {
+          const listItem = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = item.link;
+          link.textContent = item.title || item.link; // Use the title if available, otherwise use the link
+
+          const copyButton = document.createElement('button');
+          copyButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="24" height="24" stroke-width="1.5" stroke="black"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"></path></svg>';
+          copyButton.className = 'copy-button';
+          copyButton.addEventListener('click', () => {
+            // Check if item.note exists
+            if (item.note) {
+              copyToClipboard(`https://pinned.at/${item.note}`);
+            } else {
+              // If item.note does not exist, use item.link
+              copyToClipboard(item.link);
+            }
+            showNotification();
+          });
+
+          listItem.appendChild(copyButton);
+          listItem.appendChild(link);
+          linkList.appendChild(listItem);
+        });
+
+        // Additional: Save the original items for filtering
+        window.originalItems = data.items.slice();
+      })
+      .catch(error => {
+        console.error("Error fetching apiEndpoint:", error);
+      });
+
+    function copyToClipboard(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
+
+    function showNotification() {
+      const notification = document.getElementById('notification');
+      notification.style.display = 'block';
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 2000); // Hide the notification after 2 seconds
+    }
+
+    const searchInput = document.getElementById('searchInput');
+    const linkList = document.getElementById('linkList');
+    
+    // Function to filter links based on search input
+    function filterLinks(query) {
+      linkList.innerHTML = ''; // Clear existing list items
+
+      window.originalItems.forEach(item => {
+        // Check if the search query is present in title, link, or note
+        if (
+          item.title.toLowerCase().includes(query) ||
+          item.link.toLowerCase().includes(query) ||
+          (item.note && item.note.toLowerCase().includes(query))
+        ) {
+          const listItem = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = item.link;
+          link.textContent = item.title || item.link;
+
+          const copyButton = document.createElement('button');
+          copyButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="24" height="24" stroke-width="1.5" stroke="black"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"></path></svg>';
+          copyButton.className = 'copy-button';
+          copyButton.addEventListener('click', () => {
+            // Check if item.note exists
+            if (item.note) {
+              copyToClipboard(`https://pinned.at/${item.note}`);
+            } else {
+              // If item.note does not exist, use item.link
+              copyToClipboard(item.link);
+            }
+            showNotification();
+          });
+
+          listItem.appendChild(copyButton);
+          listItem.appendChild(link);
+          linkList.appendChild(listItem);
+        }
+      });
+    }
+
+    // Listen for keypress events on the search input
+    searchInput.addEventListener('keyup', event => {
+      if (event.key === 'Enter') {
+        filterLinks(searchInput.value.toLowerCase());
+      }
+    });
+  </script>
+</body>
+</html>

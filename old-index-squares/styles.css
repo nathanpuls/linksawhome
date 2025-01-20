@@ -1,0 +1,50 @@
+body {
+  font-family: "Urbanist", sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f2f2f2;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.grid-item {
+  position: relative;
+  width: 100%;
+  padding-top: 80%;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.grid-item img {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 60%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.grid-item p {
+  position: absolute;
+  bottom: -15px; /* Adjusted to bottom: 0 */
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.grid-item p.websiteName {
+  background-color: white;
+  color: black;
+  padding: 5px;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}

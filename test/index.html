@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>linksaw</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /*#brand {
+            cursor: pointer;
+            text-align: center;
+        }*/
+
+        #content {
+            background-image: url('https://linksaw.com/test/cool-background.png'); /* Replace with your image URL */
+            background-size: cover; /* Ensures the image covers the area */
+            background-position: center; /* Centers the image */
+            min-height: 100vh; /* Ensures the content area takes full height */
+            padding: 20px;
+        }
+
+        #brand {
+            cursor: pointer;
+            text-align: center;
+            font-size: 36px; /* Adjust the size of your text */
+            font-weight: bold;
+            color: transparent; /* Make the text color transparent */
+            background-image: url('https://linksaw.com/test/cool-background.png'); /* Replace with your .png image path */
+            background-size: cover; /* Make sure the background image covers the text area */
+            -webkit-background-clip: text; /* For WebKit browsers like Chrome/Safari */
+            background-clip: text; /* Standard property for other browsers */
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+           /* background-image: url('https://linksaw.com/test/cool-background.png'); /* Texture */
+            background-size: cover; /* Ensures the texture covers the area */
+            background-position: center; /* Centers the texture */
+            padding: 0 0px; /* Adds space on the left and right */
+        }
+
+
+
+
+        .search-bar {
+            width: 300px;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 30px;
+            border: none;
+            /*border: 2px solid #ddd;*/
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            width: 300px;
+            background-color: white;
+            border: none;
+            border-top: none;
+            border-radius: 15px 15px 15px 15px;
+            max-height: 450px;
+            overflow-y: auto;
+            z-index: 10;
+            margin-left: auto;   /* Center horizontally */
+            margin-right: auto;  /* Center horizontally */
+            
+        }
+
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+            padding-left: 15px;
+        }
+
+        .suggestion-item:hover {
+            background-color: rgba(255, 172, 28, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id='brand'>linksaw</h1>
+
+    <div id="content">
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-bar" oninput="showSuggestions()"
+            onkeydown="handleEnter(event)" autofocus placeholder="Enter website and keywords">
+        <div id="suggestions" class="suggestions"></div>
+    </div>
+        </div>
+
+    <script>
+        document.getElementById('brand').addEventListener('click', function () {
+            const input = document.getElementById('searchInput');
+            input.value = ''; // Clear the input
+            const suggestionsBox = document.getElementById('suggestions');
+            suggestionsBox.style.display = 'none'; // Hide suggestions initially
+            input.focus(); // Keep focus on the input
+
+            // Trigger the showSuggestions immediately after clearing the input
+            showSuggestions();
+        });
+
+
+        window.onload = function () {
+            document.getElementById('searchInput').focus();
+        };
+
+        let suggestionsData = [];
+
+        // Load suggestions from suggestions.txt
+        fetch('suggestions.txt')
+            .then(response => response.text())
+            .then(data => {
+                suggestionsData = parseSuggestions(data); // Parse the plain text into label and URL pairs
+                console.log('Suggestions loaded:', suggestionsData); // Debugging suggestions
+            })
+            .catch(error => console.error('Error loading suggestions:', error));
+
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsBox = document.getElementById('suggestions');
+
+        let currentQuery = '';
+
+        function parseSuggestions(data) {
+            const lines = data.split('\n');
+            return lines.map(line => {
+                // Find the index of the first comma
+                const firstCommaIndex = line.indexOf(',');
+                if (firstCommaIndex !== -1) {
+                    // Extract the label and URL based on the first comma
+                    const label = line.slice(0, firstCommaIndex).trim(); // Everything before the first comma
+                    const url = line.slice(firstCommaIndex + 1).trim();  // Everything after the first comma
+                    return { label, url };
+                }
+                return null; // Ignore lines without a comma
+            }).filter(item => item); // Remove null values
+        }
+
+
+        function showSuggestions() {
+            const query = searchInput.value.trim();
+            currentQuery = query;
+
+            // Clear existing suggestions
+            suggestionsBox.innerHTML = '';
+
+            if (query.length === 0) {
+                document.getElementById('suggestions').style.display = 'none'; // Hide if no query
+                return;
+            }
+
+            document.getElementById('suggestions').style.display = 'block'; // Show suggestions if there is input
+
+            // Filter suggestions based on user input
+            const filteredSuggestions = suggestionsData.filter(item =>
+                item.label.toLowerCase().includes(query.toLowerCase())
+            );
+
+            // Limit the suggestions to a maximum of 10
+            const limitedSuggestions = filteredSuggestions.slice(0, 10);
+
+            limitedSuggestions.forEach(suggestion => {
+                const suggestionElement = document.createElement('div');
+                suggestionElement.classList.add('suggestion-item');
+                suggestionElement.textContent = suggestion.label;
+                suggestionElement.onclick = () => selectSuggestion(suggestion);
+                suggestionsBox.appendChild(suggestionElement);
+            });
+        }
+
+
+        function selectSuggestion(suggestion) {
+            // Set the input value to just the label, clearing the previous input text
+            searchInput.value = suggestion.label + ' ';
+            suggestionsBox.innerHTML = ''; // Clear suggestions
+            searchInput.focus(); // Focus on the input field
+        }
+
+        function handleEnter(event) {
+            if (event.key === 'Enter' && currentQuery.length > 0) {
+                const queryParts = searchInput.value.trim().split(' ');
+
+                // If the query is only the label without any search query
+                if (queryParts.length === 1) {
+                    const searchEngineLabel = queryParts[0];
+
+                    // Find the corresponding engine by label
+                    const engine = suggestionsData.find(item =>
+                        item.label.toLowerCase() === searchEngineLabel.toLowerCase()
+                    );
+
+                    if (engine) {
+                        // Redirect to the base URL (without adding the "$")
+                        const url = engine.url.replace(/\$/g, '');
+
+
+                        // Redirect to the final URL
+                        console.log('Redirecting to:', url); // Debugging final URL
+                        window.location.href = url;
+                    } else {
+                        alert('No matching search engine found.');
+                    }
+                } else {
+                    // Ensure that we have both label and query
+                    let searchEngineLabel = '';
+                    let searchQuery = '';
+                    for (let i = 1; i <= queryParts.length; i++) {
+                        searchEngineLabel = queryParts.slice(0, i).join(' '); // Try a longer label
+                        searchQuery = queryParts.slice(i).join(' '); // Everything after is the search query
+
+                        // Check if the label exists in suggestionsData
+                        const engine = suggestionsData.find(item =>
+                            item.label.toLowerCase() === searchEngineLabel.toLowerCase()
+                        );
+
+                        if (engine) {
+                            // Once we find a matching label, break out of the loop
+                            break;
+                        }
+                    }
+
+                    console.log('Search engine label:', searchEngineLabel); // Debugging label
+                    console.log('Search query:', searchQuery); // Debugging query
+
+                    if (searchEngineLabel && searchQuery) {
+                        // Find the corresponding URL for the search engine label
+                        const engine = suggestionsData.find(item =>
+                            item.label.toLowerCase() === searchEngineLabel.toLowerCase() // Exact match for label
+                        );
+
+                        if (engine) {
+                            // Replace the "$" placeholder with the actual search query
+                            const url = engine.url.replace('$', encodeURIComponent(searchQuery));
+
+                            // Redirect to the final URL
+                            console.log('Redirecting to:', url); // Debugging final URL
+                            window.location.href = url;
+                        } else {
+                            alert('No matching search engine found.');
+                        }
+                    } else {
+                        alert('No valid search query.');
+                    }
+                }
+            }
+        }
+
+        // Close suggestions if the user clicks anywhere outside of the search input or suggestions box
+        document.addEventListener('click', function(event) {
+            const suggestionsBox = document.getElementById('suggestions');
+            const searchInput = document.getElementById('searchInput');
+
+            // Check if the click was outside the input and suggestions box
+            if (!searchInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
+                suggestionsBox.style.display = 'none'; // Hide the suggestions
+            }
+        });
+
+        // Show suggestions when the input is focused
+        searchInput.addEventListener('focus', function() {
+            if (searchInput.value.trim().length > 0) {
+                suggestionsBox.style.display = 'block'; // Show suggestions if there's text in the input
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>

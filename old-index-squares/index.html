@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pinned.at</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Urbanist', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f2f2f2;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 20px;
+    }
+
+    .grid-item {
+      position: relative;
+      width: 100%;
+      padding-top: 80%;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .grid-item img {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50%;
+      height: 60%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .grid-item p {
+      position: absolute;
+      bottom: -15px; /* Adjusted to bottom: 0 */
+      left: 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    .grid-item p.websiteName {
+      font-family: 'Urbanist';
+      background-color: white;
+      color: black;
+      padding: 5px;
+      display: flex;
+      text-align: center;
+      justify-content: center;
+    }
+
+    .tooltip {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60%;
+      background-color:white;
+      padding: 10px;
+      border-radius: 8px;
+      z-index: 1;
+    }
+
+    .tooltip a {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .grid-item:hover .tooltip {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<div class="grid-container" id="websiteGrid">
+  <!-- Dummy Websites will be added here using JavaScript -->
+</div>
+
+<script>
+  
+  const github = 'https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png';
+  // Dummy websites data
+ const websites = [
+  ["Codepen", "http://codepen.com", null, [
+    { name: 'New', url: 'http://codepen.com/pen/' },
+    { name: 'Your Work', url: 'https://codepen.io/your-work/' }
+  ]],
+  ["Gmail", "https://mail.google.com", null, [
+    { name: 'Compose', url: 'https://mail.google.com/mail/u/0/#inbox?compose=new'}
+  ]],
+  ["GitHub", "https://github.com", github, [
+    { name: 'Your repositories', url: 'https://github.com/nathanpuls?tab=repositories' }
+  ]],
+  // Add more websites as needed
+];
+
+  // Function to generate HTML for each website item
+  function generateWebsiteItem(website) {
+    const [name, url, altIconUrl, links] = website;
+    const iconUrl = altIconUrl || `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=128`;
+
+    // Generate links HTML
+    const linksHTML = links
+      ? `<div class="tooltip">
+          ${links.map(link => `<a href="${link.url}">${link.name}</a>`).join('')}
+        </div>`
+      : '';
+
+    return `
+      <div class="grid-item">
+        <a href="${url}">
+          <img src="${iconUrl}" alt="${name} Icon">
+          <p class="websiteName">${name}</p>
+        </a>
+        ${linksHTML}
+      </div>
+    `;
+  }
+
+  // Add dummy websites to the grid
+  const gridContainer = document.getElementById("websiteGrid");
+  websites.forEach(website => {
+    gridContainer.innerHTML += generateWebsiteItem(website);
+  });
+  
+  // 
+</script>
+
+</body>
+</html>
+

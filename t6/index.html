@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>linksaw</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        #brand {
+            cursor: pointer;
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            color: black;
+            /* background-image: url('https://linksaw.com/test/cool-background.png'); */
+            background-size: cover;
+            -webkit-background-clip: text;
+            background-clip: text;
+            padding-top: 30px;
+            margin-bottom: 10px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-bar {
+            width: 300px;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 30px;
+            height: 50px;
+            border: 2px solid #ddd;
+            outline: none;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            margin: 0 auto;
+        }
+
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            width: 300px;
+            background-color: white;
+            border-radius: 15px;
+            border: none;
+            max-height: 700px;
+            overflow-y: auto;
+            z-index: 10;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 18px;
+            display: none; /* Hide by default */
+        }
+
+        .suggestions.hidden {
+            border: none;
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .suggestion-item span {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .suggestion-item:hover {
+            background-color: rgba(196, 196, 196, 0.2);
+        }
+
+        .suggestion-item .number {
+            color: rgb(185, 185, 185);
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        /* Media Query for larger screens (Desktop) */
+        @media (min-width: 768px) {
+            .search-bar, .suggestions {
+                width: 600px; /* Width for desktop */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="brand">linksaw</h1>
+    <div id="content">
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-bar" oninput="showSuggestions()" onkeydown="handleKeydown(event)" autofocus placeholder="" autocomplete="off">
+            <div id="suggestions" class="suggestions"></div>
+        </div>
+    </div>
+
+    <script>
+        const inputSeparator = ': ';
+        document.getElementById('brand').addEventListener('click', function () {
+            const input = document.getElementById('searchInput');
+            input.value = '';
+            const suggestionsBox = document.getElementById('suggestions');
+            suggestionsBox.style.display = 'none';
+            input.focus();
+            showSuggestions();
+        });
+
+        window.onload = function () {
+            document.getElementById('searchInput').focus();
+            suggestionsBox.style.display = 'none';
+        };
+
+        let suggestionsData = [];
+
+        fetch('suggestions.txt')
+            .then(response => response.text())
+            .then(data => {
+                suggestionsData = parseSuggestions(data);
+                console.log('Suggestions loaded:', suggestionsData);
+            })
+            .catch(error => console.error('Error loading suggestions:', error));
+
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsBox = document.getElementById('suggestions');
+
+        function parseSuggestions(data) {
+            const lines = data.split('\n');
+            return lines.map(line => {
+                const firstCommaIndex = line.indexOf(':');
+                if (firstCommaIndex !== -1) {
+                    const label = line.slice(0, firstCommaIndex).trim();
+                    const url = line.slice(firstCommaIndex + 1).trim();
+                    return { label, url };
+                }
+                return null;
+            }).filter(item => item);
+        }
+
+        function showSuggestions() {
+            const query = searchInput.value.trim();
+            console.log('Search query:', query);
+
+            suggestionsBox.innerHTML = '';
+
+            if (query.length === 0 || suggestionsData.filter(item => item.label.toLowerCase().includes(query.toLowerCase())).length === 0) {
+                suggestionsBox.style.display = 'none';
+                console.log('No query entered or no matching suggestion found. Suggestions hidden.');
+                return;
+            }
+
+            suggestionsBox.style.display = 'block';
+            suggestionsBox.style.border = '2px solid #ddd';
+            console.log('Suggestions displayed.');
+
+            const filteredSuggestions = suggestionsData.filter(item => {
+                return item.label.toLowerCase().includes(query.toLowerCase());
+            });
+
+            const sortedSuggestions = filteredSuggestions.sort((a, b) => {
+                const queryLetter = query.charAt(0).toLowerCase();
+                const aStartsWithQueryLetter = a.label.toLowerCase().startsWith(queryLetter);
+                const bStartsWithQueryLetter = b.label.toLowerCase().startsWith(queryLetter);
+
+                if (aStartsWithQueryLetter && !bStartsWithQueryLetter) return -1;
+                if (!aStartsWithQueryLetter && bStartsWithQueryLetter) return 1;
+                return 0;
+            });
+
+            const limitedSuggestions = sortedSuggestions.slice(0, 8);
+            console.log('Limited suggestions (top 8):', limitedSuggestions);
+
+            limitedSuggestions.forEach((suggestion, index) => {
+                const suggestionElement = document.createElement('div');
+                suggestionElement.classList.add('suggestion-item');
+                suggestionElement.innerHTML = `<span class="number">${index + 1}</span>${suggestion.label}`;
+                suggestionElement.onclick = () => selectSuggestion(suggestion);
+                suggestionsBox.appendChild(suggestionElement);
+            });
+        }
+
+        function handleKeydown(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        const query = searchInput.value.trim();
+
+        // Check if the input is a valid URL
+        const urlPattern = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/;
+        if (urlPattern.test(query)) {
+            // Add 'http://' if the user didn't include a protocol
+            const fullUrl = query.startsWith('http://') || query.startsWith('https://') ? query : 'http://' + query;
+            window.location.href = fullUrl;
+        } else {
+            // If not a URL, proceed with Google search or suggestions
+            if (!query.includes(':')) {
+                const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                window.location.href = searchUrl;
+            } else {
+                const [labelPart, ...searchTerms] = query.split(inputSeparator);
+                const searchQuery = searchTerms.join(' ').trim();
+
+                const matchingSuggestion = suggestionsData.find(item => {
+                    const cleanedLabelPart = labelPart.trim().replace(/:/g, '').toLowerCase();
+                    return item.label.toLowerCase() === cleanedLabelPart;
+                });
+
+                if (matchingSuggestion) {
+                    let url = matchingSuggestion.url;
+
+                    if (url.includes('$')) {
+                        url = url.replace('$', encodeURIComponent(searchQuery));
+                    }
+
+                    window.location.href = url;
+                } else {
+                    console.log('No matching suggestion found.');
+                }
+            }
+        }
+    }
+
+    const number = parseInt(event.key, 10);
+    if (!isNaN(number) && number >= 1 && number <= 9) {
+        const suggestionElements = document.querySelectorAll('.suggestion-item');
+        const index = number - 1;
+        if (index < suggestionElements.length) {
+            event.preventDefault();
+            suggestionElements[index].click();
+        }
+    }
+}
+
+        function selectSuggestion(suggestion) {
+            searchInput.value = suggestion.label + inputSeparator;
+            suggestionsBox.innerHTML = '';
+            searchInput.focus();
+        }
+
+        document.addEventListener('click', function (event) {
+            if (!searchInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
+                suggestionsBox.style.display = 'none';
+            }
+        });
+
+        searchInput.addEventListener('focus', function () {
+            if (searchInput.value.trim().length > 0) {
+                suggestionsBox.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
